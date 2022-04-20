@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Автор: {{ author.first_name }} {{ author.last_name }}</h1>
+
+  <p><strong>Author:</strong> {{ author.first_name }} {{ author.last_name }}
+    {% if perms.catalog.syka %}
+    <a href="{% url 'author-update' pk=author.pk %}">Update</a>
+    <a href="{% url 'author-delete' pk=author.pk %}">Delete</a>
+    {% endif %}    
+  </p>
+  <p><strong>Date of birth:</strong> {{ author.date_of_birth }}</p>
+  <p><strong>Date of death:</strong> {% if author.date_of_death %}{{ author.date_of_death }}{% endif %}</p>  
+  {% if author.book_set.all %}
+  <p>
+    <strong>
+      <h1>Книги:</h1>
+      {% for book in author.book_set.all %}
+        <a href="{% url 'book-detail' book.pk %}">{{ book.title }} ({% if book.date_of_published %}{{ book.date_of_published}}{% else %}Неизвестно{% endif %})</a>{% if not forloop.last %},{% endif %}
+        ({{ book.pk }})
+        <p>{{ book.summary }}</p>      
+      {% endfor %}
+    </strong>
+  </p>
+  {% endif %}
+{% endblock %}
